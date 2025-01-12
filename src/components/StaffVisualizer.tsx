@@ -20,16 +20,16 @@ export const StaffVisualizer = () => {
         const hasSharp = pitch.includes('#');
 
         // In ABC notation, lowercase letters are one octave higher
-        let abcNote = octave >= 4 ? abcPitch.toLowerCase() : abcPitch;
+        let abcNote = octave >= 5 ? abcPitch.toLowerCase() : abcPitch;
         // Add sharp if needed
         if (hasSharp) {
           abcNote = '^' + abcNote;
         }
         // Add octave markers
-        if (octave > 4) {
-          abcNote = abcNote + "'".repeat(octave - 4);
-        } else if (octave < 3) {
-          abcNote = abcNote + ','.repeat(3 - octave);
+        if (octave > 5) {
+          abcNote = abcNote + "'".repeat(octave - 5);
+        } else if (octave < 4) {
+          abcNote = abcNote + ','.repeat(4 - octave);
         }
         return abcNote;
       })

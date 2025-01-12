@@ -1,0 +1,183 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: white;
+  background: #1a1a1a;
+  min-height: 100vh;
+}
+
+.midi-status,
+.device-list,
+.active-device {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #242424;
+}
+
+.device-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.device-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  background: #2a2a2a;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background: #646cff;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-left: 1rem;
+}
+
+button:hover {
+  background: #535bf2;
+  transform: translateY(-1px);
+}
+
+.active-device {
+  background: #1a2b3c;
+}
+
+h1,
+h2 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 3rem;
+  background: linear-gradient(45deg, #646cff, #535bf2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2rem;
+}
+
+.note-display {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #242424;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.note-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.note-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #646cff;
+}
+
+.velocity {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.no-notes {
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+
+.staff-container {
+  background: #242424;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.staff-visualizer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

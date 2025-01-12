@@ -1,19 +1,14 @@
+import './App.css';
 import { useEffect } from 'react';
 import { useMidiStore } from './stores/useMidiStore';
-import './App.css';
 import { StaffVisualizer } from './components/StaffVisualizer';
+import { KeyboardInput } from './components/KeyboardInput';
+import { NoteDisplay } from './components/NoteDisplay';
+import PianoKeyboard from './components/PianoKeyboard';
 
 function App(): JSX.Element {
-  const {
-    hasAccess,
-    devices,
-    selectedDevice,
-    activeNotes,
-    requestAccess,
-    connectDevice,
-    disconnectDevice,
-    getNoteNameWithOctave,
-  } = useMidiStore();
+  const { hasAccess, devices, selectedDevice, requestAccess, connectDevice, disconnectDevice } =
+    useMidiStore();
 
   useEffect(() => {
     requestAccess();
@@ -55,27 +50,16 @@ function App(): JSX.Element {
         </div>
       )}
 
+      <KeyboardInput />
+
       <div className="staff-container">
         <h2>Musical Staff</h2>
         <StaffVisualizer />
       </div>
 
-      <div className="note-display">
-        <h2>Active Notes</h2>
-        <div className="debug">Active Notes Count: {activeNotes.length}</div>
-        {activeNotes.length === 0 ? (
-          <p className="no-notes">No keys pressed</p>
-        ) : (
-          <div className="notes-grid">
-            {activeNotes.map((note) => (
-              <div key={note.note} className="note-card">
-                <div className="note-name">{getNoteNameWithOctave(note.note)}</div>
-                <div className="velocity">Velocity: {note.velocity}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <NoteDisplay />
+
+      <PianoKeyboard />
     </div>
   );
 }

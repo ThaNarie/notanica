@@ -1,9 +1,5 @@
 import { create } from 'zustand';
-
-interface MIDINote {
-  note: number;
-  velocity: number;
-}
+import { useNoteStore } from './useNoteStore';
 
 interface MIDIDevice {
   id: string;
@@ -16,30 +12,19 @@ interface MIDIState {
   hasAccess: boolean;
   devices: MIDIDevice[];
   selectedDevice: MIDIDevice | null;
-  midiAccess: WebMidi.MIDIAccess | null;
-  activeNotes: MIDINote[];
+  midiAccess: MIDIAccess | null;
   requestAccess: () => Promise<void>;
   listDevices: () => void;
   connectDevice: (deviceId: string) => Promise<void>;
   disconnectDevice: (deviceId: string) => void;
-  handleMIDIMessage: (message: WebMidi.MIDIMessageEvent) => void;
-  getNoteNameWithOctave: (noteNumber: number) => string;
+  handleMIDIMessage: (message: MIDIMessageEvent) => void;
 }
-
-const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 export const useMidiStore = create<MIDIState>((set, get) => ({
   hasAccess: false,
   devices: [],
   selectedDevice: null,
   midiAccess: null,
-  activeNotes: [],
-
-  getNoteNameWithOctave: (noteNumber: number) => {
-    const octave = Math.floor(noteNumber / 12) - 1;
-    const noteName = NOTE_NAMES[noteNumber % 12];
-    return `${noteName}${octave}`;
-  },
 
   requestAccess: async () => {
     try {
@@ -98,24 +83,31 @@ export const useMidiStore = create<MIDIState>((set, get) => ({
       input.onmidimessage = null;
     }
 
-    set({ selectedDevice: null, activeNotes: [] });
+    set({ selectedDevice: null });
   },
 
-  handleMIDIMessage: (message: WebMidi.MIDIMessageEvent) => {
+  handleMIDIMessage: (message: MIDIMessageEvent) => {
+    if (!message.data) return;
     const [command, note, velocity] = message.data;
-    const { activeNotes } = get();
+
+    // Get the note store's actions
+    const { pressNote, releaseNote } = useNoteStore.getState();
 
     console.log('MIDI Message:', { command, note, velocity }); // Debug log
 
     // Note On message
     if (command === 144 && velocity > 0) {
       console.log('Adding note:', note); // Debug log
-      set({ activeNotes: [...activeNotes, { note, velocity }] });
+      pressNote({
+        pitch: note,
+        velocity,
+        source: 'midi',
+      });
     }
     // Note Off message
     else if (command === 128 || (command === 144 && velocity === 0)) {
       console.log('Removing note:', note); // Debug log
-      set({ activeNotes: activeNotes.filter((n) => n.note !== note) });
+      releaseNote(note);
     }
   },
 }));

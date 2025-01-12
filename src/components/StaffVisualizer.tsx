@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import ABCJS from 'abcjs';
-import { useMidiStore } from '../stores/useMidiStore';
+import { useNoteStore } from '../stores/useNoteStore';
 
 export const StaffVisualizer = () => {
   const divRef = useRef<HTMLDivElement>(null);
-  const { activeNotes, getNoteNameWithOctave } = useMidiStore();
+  const { activeNotes } = useNoteStore();
 
   useEffect(() => {
     if (!divRef.current) return;
@@ -12,9 +12,11 @@ export const StaffVisualizer = () => {
     // Convert MIDI notes to ABC notation
     const abcNotes = activeNotes
       .map((note) => {
-        const noteName = getNoteNameWithOctave(note.note);
         // Convert note name to ABC notation
-        const [pitch, octave] = [noteName.slice(0, -1), parseInt(noteName.slice(-1))];
+        const [pitch, octave] = [
+          note.fullNoteName.slice(0, -1),
+          parseInt(note.fullNoteName.slice(-1)),
+        ];
         // Convert sharp notation from # to ^ for ABC
         const abcPitch = pitch.replace('#', '');
         const hasSharp = pitch.includes('#');
@@ -40,12 +42,12 @@ X: 1
 M: 4/4
 L: 1/4
 K: C
-${abcNotes || 'z4'}
+${abcNotes || 'G,^C^E' || 'z4'}
 `;
 
     ABCJS.renderAbc(divRef.current, abcNotation, {
       add_classes: true,
-      // responsive: 'resize',
+      selectTypes: [],
       staffwidth: 200,
       paddingbottom: 0,
     });

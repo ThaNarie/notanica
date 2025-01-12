@@ -1,3 +1,8 @@
+body {
+  margin: 0;
+  padding-bottom: 140px; /* Add padding for the piano keyboard */
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -123,7 +128,7 @@ h1 {
 
 .notes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   gap: 1rem;
   margin-top: 1rem;
 }

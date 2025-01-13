@@ -5,7 +5,7 @@ import { upperKeyMap, lowerKeyMap } from '../utils/keyboardMapping';
 
 const whiteKeyWidth = 50;
 const blackKeyWidth = 28;
-const pianoHeight = 140;
+const pianoHeight = 150;
 
 const KeyboardContainer = styled.div`
   position: fixed;
@@ -16,26 +16,44 @@ const KeyboardContainer = styled.div`
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+`;
+
+const InnerShadow = styled.div`
+  position: absolute;
+  box-shadow: inset 0px 8px 10px 0px rgba(0, 0, 0, 0.2);
+  inset: 10px;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 0 0 4px 4px;
+`;
+
+const KeysWrapper = styled.div`
   display: flex;
   align-items: flex-start;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
 `;
 
 const KeyLabel = styled.span<{
   isBlack?: boolean;
   position: 'top' | 'bottom';
-  labelPosition?: 'left' | 'center' | 'right';
+  labelPosition?: '<<' | '<' | '' | '>' | '>>';
 }>`
   position: absolute;
   ${(props) => (props.position === 'top' ? 'top: 8px;' : 'bottom: 8px;')}
   ${(props) => {
     if (props.position === 'top' && props.labelPosition) {
       switch (props.labelPosition) {
-        case 'left':
-          return 'left: 66%;';
-        case 'right':
+        case '<<':
           return 'left: 33%;';
+        case '<':
+          return 'left: 45%;';
         default:
           return 'left: 50%;';
+        case '>':
+          return 'left: 55%;';
+        case '>>':
+          return 'left: 67%;';
       }
     }
     return 'left: 50%;';
@@ -49,8 +67,8 @@ const KeyLabel = styled.span<{
 `;
 
 const WhiteKey = styled.div<{ isPressed: boolean }>`
-  width: ${whiteKeyWidth}px;
-  height: ${pianoHeight}px;
+  width: ${whiteKeyWidth - 1}px;
+  height: ${pianoHeight - 2}px;
   background: ${(props) => (props.isPressed ? '#c8e6c9' : 'white')};
   border: 1px solid #ccc;
   border-radius: 0 0 4px 4px;
@@ -66,12 +84,13 @@ const WhiteKey = styled.div<{ isPressed: boolean }>`
   }
 `;
 
-const BlackKey = styled.div<{ isPressed: boolean }>`
+const BlackKey = styled.div<{ isPressed: boolean; offset?: number }>`
   width: ${blackKeyWidth}px;
-  height: ${pianoHeight - 45}px;
+  height: ${pianoHeight - 50}px;
   background: ${(props) => (props.isPressed ? '#81c784' : '#333')};
+  box-shadow: 1px 2px 4px 0px rgba(0, 0, 0, 0.5);
   position: absolute;
-  right: -${blackKeyWidth / 2}px;
+  right: -${(props) => blackKeyWidth / 2 + (props.offset ?? 0)}px;
   top: 0;
   z-index: 1;
   cursor: pointer;
@@ -122,13 +141,55 @@ const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
   const { pressNote, releaseNote, isNotePressed } = useNoteStore();
 
   const createOctave = (startNote: number) => [
-    { note: 'C', hasBlack: true, prevHasBlack: false, midiNote: startNote },
-    { note: 'D', hasBlack: true, prevHasBlack: true, midiNote: startNote + 2 },
-    { note: 'E', hasBlack: false, prevHasBlack: true, midiNote: startNote + 4 },
-    { note: 'F', hasBlack: true, prevHasBlack: false, midiNote: startNote + 5 },
-    { note: 'G', hasBlack: true, prevHasBlack: true, midiNote: startNote + 7 },
-    { note: 'A', hasBlack: true, prevHasBlack: true, midiNote: startNote + 9 },
-    { note: 'B', hasBlack: false, prevHasBlack: true, midiNote: startNote + 11 },
+    {
+      note: 'C',
+      hasBlack: true,
+      labelOffset: '<<',
+      blackOffset: 'left',
+      midiNote: startNote,
+    },
+    {
+      note: 'D',
+      hasBlack: true,
+      labelOffset: '',
+      blackOffset: 'right',
+      midiNote: startNote + 2,
+    },
+    {
+      note: 'E',
+      hasBlack: false,
+      labelOffset: '>>',
+      blackOffset: 'none',
+      midiNote: startNote + 4,
+    },
+    {
+      note: 'F',
+      hasBlack: true,
+      labelOffset: '<<',
+      blackOffset: 'left',
+      midiNote: startNote + 5,
+    },
+    {
+      note: 'G',
+      hasBlack: true,
+      labelOffset: '<',
+      blackOffset: 'none',
+      midiNote: startNote + 7,
+    },
+    {
+      note: 'A',
+      hasBlack: true,
+      labelOffset: '>',
+      blackOffset: 'right',
+      midiNote: startNote + 9,
+    },
+    {
+      note: 'B',
+      hasBlack: false,
+      labelOffset: '>>',
+      blackOffset: 'none',
+      midiNote: startNote + 11,
+    },
   ];
 
   const keys = [
@@ -152,48 +213,41 @@ const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
 
   return (
     <KeyboardContainer>
-      {keys.map((key, index) => (
-        <KeyWrapper key={index} hasBlackKey={key.hasBlack}>
-          <WhiteKey
-            isPressed={isNotePressed(key.midiNote)}
-            onMouseDown={() => handleNotePress(key.midiNote)}
-            onMouseUp={() => handleNoteRelease(key.midiNote)}
-            onMouseLeave={() => handleNoteRelease(key.midiNote)}
-          >
-            <KeyLabel
-              position="top"
-              labelPosition={
-                key.hasBlack && key.prevHasBlack
-                  ? 'center'
-                  : key.hasBlack
-                    ? 'right'
-                    : key.prevHasBlack
-                      ? 'left'
-                      : 'center'
-              }
+      <KeysWrapper>
+        {keys.map((key, index) => (
+          <KeyWrapper key={index} hasBlackKey={key.hasBlack}>
+            <WhiteKey
+              isPressed={isNotePressed(key.midiNote)}
+              onMouseDown={() => handleNotePress(key.midiNote)}
+              onMouseUp={() => handleNoteRelease(key.midiNote)}
+              onMouseLeave={() => handleNoteRelease(key.midiNote)}
             >
-              {key.note}
-              {key.note === 'C' ? getOctave(key.midiNote) : ''}
-            </KeyLabel>
-            <KeyLabel position="bottom">{findKeyByNote(key.midiNote)}</KeyLabel>
-          </WhiteKey>
-          {key.hasBlack && (
-            <BlackKey
-              isPressed={isNotePressed(key.midiNote + 1)}
-              onMouseDown={() => handleNotePress(key.midiNote + 1)}
-              onMouseUp={() => handleNoteRelease(key.midiNote + 1)}
-              onMouseLeave={() => handleNoteRelease(key.midiNote + 1)}
-            >
-              <KeyLabel isBlack position="top">
-                {key.note}#
+              <KeyLabel position="top" labelPosition={key.labelOffset}>
+                {key.note}
+                {key.note === 'C' ? getOctave(key.midiNote) : ''}
               </KeyLabel>
-              <KeyLabel isBlack position="bottom">
-                {findKeyByNote(key.midiNote + 1)}
-              </KeyLabel>
-            </BlackKey>
-          )}
-        </KeyWrapper>
-      ))}
+              <KeyLabel position="bottom">{findKeyByNote(key.midiNote)}</KeyLabel>
+            </WhiteKey>
+            {key.hasBlack && (
+              <BlackKey
+                offset={key.blackOffset === 'left' ? -4 : key.blackOffset === 'right' ? 4 : 0}
+                isPressed={isNotePressed(key.midiNote + 1)}
+                onMouseDown={() => handleNotePress(key.midiNote + 1)}
+                onMouseUp={() => handleNoteRelease(key.midiNote + 1)}
+                onMouseLeave={() => handleNoteRelease(key.midiNote + 1)}
+              >
+                <KeyLabel isBlack position="top">
+                  {key.note}#
+                </KeyLabel>
+                <KeyLabel isBlack position="bottom">
+                  {findKeyByNote(key.midiNote + 1)}
+                </KeyLabel>
+              </BlackKey>
+            )}
+          </KeyWrapper>
+        ))}
+      </KeysWrapper>
+      <InnerShadow />
     </KeyboardContainer>
   );
 };

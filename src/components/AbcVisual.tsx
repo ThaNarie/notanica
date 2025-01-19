@@ -24,10 +24,10 @@ ${notes}`;
       add_classes: true,
       selectTypes: [],
       staffwidth: 200,
-      paddingbottom: 0,
+      // paddingbottom: 0,
       scale: 1.5,
     });
   }, []);
 
-  return <div ref={divRef} className="staff-visualizer" />;
+  return <div ref={divRef} className="w-full flex justify-center items-center" />;
 }

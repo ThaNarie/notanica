@@ -87,5 +87,5 @@ ${voicesAndNotes}`;
     });
   }, [activeNotes]);
 
-  return <div ref={divRef} className="staff-visualizer" />;
+  return <div ref={divRef} className="w-full flex justify-center items-center" />;
 };

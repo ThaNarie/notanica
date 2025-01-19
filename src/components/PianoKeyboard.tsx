@@ -67,8 +67,8 @@ const KeyLabel = styled.span<{
 `;
 
 const WhiteKey = styled.div<{ isPressed: boolean }>`
-  width: ${whiteKeyWidth - 1}px;
-  height: ${pianoHeight - 2}px;
+  width: ${whiteKeyWidth + 1}px;
+  height: ${pianoHeight + 1}px;
   background: ${(props) => (props.isPressed ? '#c8e6c9' : 'white')};
   border: 1px solid #ccc;
   border-radius: 0 0 4px 4px;

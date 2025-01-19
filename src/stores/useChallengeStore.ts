@@ -4,6 +4,7 @@ import { Notes } from '../services/MusicGenerator';
 export interface Challenge {
   id: string;
   notes: Notes;
+  currentIndex: number;
   name?: string;
 }
 
@@ -13,6 +14,8 @@ interface ChallengeState {
   addChallenge: (notes: Notes, name?: string) => string; // Returns the id of the new challenge
   removeChallenge: (id: string) => void;
   getChallenges: () => Challenge[];
+  advanceIndex: (challengeId: string) => void;
+  resetProgress: (challengeId: string) => void;
 }
 
 export const useChallengeStore = create<ChallengeState>((set, get) => ({
@@ -23,6 +26,7 @@ export const useChallengeStore = create<ChallengeState>((set, get) => ({
     const challenge: Challenge = {
       id,
       notes,
+      currentIndex: 0,
       name
     };
     
@@ -41,5 +45,28 @@ export const useChallengeStore = create<ChallengeState>((set, get) => ({
 
   getChallenges: () => {
     return get().challenges;
+  },
+
+  advanceIndex: (challengeId) => {
+    set(state => ({
+      challenges: state.challenges.map(challenge => 
+        challenge.id === challengeId
+          ? {
+              ...challenge,
+              currentIndex: Math.min(challenge.currentIndex + 1, challenge.notes.length)
+            }
+          : challenge
+      )
+    }));
+  },
+
+  resetProgress: (challengeId) => {
+    set(state => ({
+      challenges: state.challenges.map(challenge =>
+        challenge.id === challengeId
+          ? { ...challenge, currentIndex: 0 }
+          : challenge
+      )
+    }));
   }
 }));

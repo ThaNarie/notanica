@@ -5,6 +5,7 @@ import { StaffVisualizer } from './components/StaffVisualizer';
 import { KeyboardInput } from './components/KeyboardInput';
 import { NoteDisplay } from './components/NoteDisplay';
 import PianoKeyboard from './components/PianoKeyboard';
+import { Field } from './components/Field';
 
 function App(): JSX.Element {
   const { hasAccess, devices, selectedDevice, requestAccess, connectDevice, disconnectDevice } =
@@ -17,7 +18,7 @@ function App(): JSX.Element {
   return (
     <div className="app">
       <div className="left-container">
-        <h1>MIDI Piano Controller</h1>
+        <h1>Notanica</h1>
 
         <div className="midi-status">
           <h2>MIDI Status</h2>
@@ -53,19 +54,12 @@ function App(): JSX.Element {
 
         <KeyboardInput />
 
-        <div className="staff-container">
-          <h2>Musical Staff</h2>
-          <StaffVisualizer />
-        </div>
-
         <NoteDisplay />
-
-        <PianoKeyboard />
       </div>
 
-      <div className="field-container">
-        <div className="field">{/* Enemy spawn area will go here */}</div>
-      </div>
+      <Field />
+
+      <PianoKeyboard />
     </div>
   );
 }

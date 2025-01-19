@@ -40,6 +40,26 @@ export enum ScaleNote {
     B = 'B'
 }
 
+export const ScalePosition: Record<string, number> = {
+  C: 0,
+  Cs: 1,
+  Db: 1,
+  D: 2,
+  Ds: 3,
+  Eb: 3,
+  E: 4,
+  F: 5,
+  Fs: 6,
+  Gb: 6,
+  G: 7,
+  Gs: 8,
+  Ab: 8,
+  A: 9,
+  As: 10,
+  Bb: 10,
+  B: 11,
+};
+
 export type Notes = Array<{ note: ScaleNote; octave: number }>;
 
 /**
@@ -274,12 +294,12 @@ export class MusicGenerator {
             
             if (i > 0) {
                 const prevNote = melody[i - 1];
-                const prevIndex = Object.values(ScaleNote).indexOf(prevNote);
-                const currentIndex = Object.values(ScaleNote).indexOf(currentNote);
+        const prevPosition = ScalePosition[prevNote];
+        const currentPosition = ScalePosition[currentNote];
                 
                 // Adjust octave if we wrapped around the scale
-                if (Math.abs(currentIndex - prevIndex) > 4) {
-                    if (currentIndex < prevIndex) {
+        if (Math.abs(currentPosition - prevPosition) > 4) {
+          if (currentPosition < prevPosition) {
                         currentOctave++;
                     } else {
                         currentOctave--;

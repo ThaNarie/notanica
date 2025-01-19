@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { ChallengeUpdateService } from '../services/ChallengeUpdateService';
 
 export interface Note {
   // Core properties
@@ -115,6 +116,8 @@ export const useNoteStore = create<NoteState>((set, get) => ({
       const newActiveNotes = [...state.activeNotes, newNote].sort((a, b) => a.pitch - b.pitch);
       return { activeNotes: newActiveNotes };
     });
+
+    ChallengeUpdateService.updateChallenges(newNote);
   },
 
   releaseNote: (pitch) => {

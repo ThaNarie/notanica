@@ -27,19 +27,19 @@ export const useChallengeStore = create<ChallengeState>((set, get) => ({
       id,
       notes,
       currentIndex: 0,
-      name
+      name,
     };
-    
-    set(state => ({
-      challenges: [...state.challenges, challenge]
+
+    set((state) => ({
+      challenges: [...state.challenges, challenge],
     }));
 
     return id;
   },
 
   removeChallenge: (id) => {
-    set(state => ({
-      challenges: state.challenges.filter(c => c.id !== id)
+    set((state) => ({
+      challenges: state.challenges.filter((c) => c.id !== id),
     }));
   },
 
@@ -49,13 +49,13 @@ export const useChallengeStore = create<ChallengeState>((set, get) => ({
 
   advanceIndex: (challengeId) => {
     let updatedChallenge: Challenge | undefined;
-    
-    set(state => {
-      const challenges = state.challenges.map(challenge => {
+
+    set((state) => {
+      const challenges = state.challenges.map((challenge) => {
         if (challenge.id === challengeId) {
           updatedChallenge = {
             ...challenge,
-            currentIndex: Math.min(challenge.currentIndex + 1, challenge.notes.length)
+            currentIndex: Math.min(challenge.currentIndex + 1, challenge.notes.length),
           };
           return updatedChallenge;
         }
@@ -69,13 +69,13 @@ export const useChallengeStore = create<ChallengeState>((set, get) => ({
 
   resetProgress: (challengeId) => {
     let updatedChallenge: Challenge | undefined;
-    
-    set(state => {
-      const challenges = state.challenges.map(challenge => {
+
+    set((state) => {
+      const challenges = state.challenges.map((challenge) => {
         if (challenge.id === challengeId) {
           updatedChallenge = {
             ...challenge,
-            currentIndex: 0
+            currentIndex: 0,
           };
           return updatedChallenge;
         }
@@ -85,5 +85,5 @@ export const useChallengeStore = create<ChallengeState>((set, get) => ({
     });
 
     return updatedChallenge;
-  }
+  },
 }));

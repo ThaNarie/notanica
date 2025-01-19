@@ -40,6 +40,8 @@ export enum ScaleNote {
     B = 'B'
 }
 
+export type Notes = Array<{ note: ScaleNote; octave: number }>;
+
 /**
  * Service class for handling music theory operations
  * This includes chord progressions, scales, and melody generation
@@ -261,10 +263,10 @@ export class MusicGenerator {
     /**
      * Get a more detailed representation of a melody including octave suggestions
      */
-    static getMelodyWithOctaves(melody: ScaleNote[]): Array<{ note: ScaleNote; octave: number }> {
+    static getMelodyWithOctaves(melody: ScaleNote[]): Notes {
         if (melody.length === 0) return [];
 
-        const result: Array<{ note: ScaleNote; octave: number }> = [];
+        const result: Notes = [];
         let currentOctave = 4; // Start in middle octave
 
         for (let i = 0; i < melody.length; i++) {

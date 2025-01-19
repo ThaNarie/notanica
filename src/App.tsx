@@ -16,50 +16,56 @@ function App(): JSX.Element {
 
   return (
     <div className="app">
-      <h1>MIDI Piano Controller</h1>
+      <div className="left-container">
+        <h1>MIDI Piano Controller</h1>
 
-      <div className="midi-status">
-        <h2>MIDI Status</h2>
-        <p>Access: {hasAccess ? 'Granted' : 'Not Granted'}</p>
-      </div>
-
-      <div className="device-list">
-        <h2>Available Devices</h2>
-        {devices.length === 0 ? (
-          <p>No MIDI devices found</p>
-        ) : (
-          <ul>
-            {devices.map((device) => (
-              <li key={device.id}>
-                {device.name} ({device.manufacturer})
-                {selectedDevice?.id === device.id ? (
-                  <button onClick={() => disconnectDevice(device.id)}>Disconnect</button>
-                ) : (
-                  <button onClick={() => connectDevice(device.id)}>Connect</button>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {selectedDevice && (
-        <div className="active-device">
-          <h2>Connected Device</h2>
-          <p>{selectedDevice.name}</p>
+        <div className="midi-status">
+          <h2>MIDI Status</h2>
+          <p>Access: {hasAccess ? 'Granted' : 'Not Granted'}</p>
         </div>
-      )}
 
-      <KeyboardInput />
+        <div className="device-list">
+          <h2>Available Devices</h2>
+          {devices.length === 0 ? (
+            <p>No MIDI devices found</p>
+          ) : (
+            <ul>
+              {devices.map((device) => (
+                <li key={device.id}>
+                  {device.name} ({device.manufacturer})
+                  {selectedDevice?.id === device.id ? (
+                    <button onClick={() => disconnectDevice(device.id)}>Disconnect</button>
+                  ) : (
+                    <button onClick={() => connectDevice(device.id)}>Connect</button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-      <div className="staff-container">
-        <h2>Musical Staff</h2>
-        <StaffVisualizer />
+        {selectedDevice && (
+          <div className="active-device">
+            <h2>Connected Device</h2>
+            <p>{selectedDevice.name}</p>
+          </div>
+        )}
+
+        <KeyboardInput />
+
+        <div className="staff-container">
+          <h2>Musical Staff</h2>
+          <StaffVisualizer />
+        </div>
+
+        <NoteDisplay />
+
+        <PianoKeyboard />
       </div>
 
-      <NoteDisplay />
-
-      <PianoKeyboard />
+      <div className="field-container">
+        <div className="field">{/* Enemy spawn area will go here */}</div>
+      </div>
     </div>
   );
 }

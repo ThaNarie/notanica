@@ -1,12 +1,14 @@
-body {
+body,
+#root {
   margin: 0;
-  padding-bottom: 140px; /* Add padding for the piano keyboard */
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 #root {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -47,12 +49,40 @@ body {
 }
 
 .app {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  color: white;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
   background: #1a1a1a;
-  min-height: 100vh;
+  color: white;
+}
+
+.left-container {
+  width: 400px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 200px;
+  border-right: 1px solid #333;
+  box-sizing: border-box;
+}
+
+.field-container {
+  flex: 1;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.field {
+  width: 100%;
+  height: 100%;
+  background-color: #222;
+  border-radius: 8px;
+  border: 1px solid #333;
 }
 
 .midi-status,

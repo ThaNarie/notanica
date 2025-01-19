@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import { useNoteStore } from '../stores/useNoteStore';
 import { upperKeyMap, lowerKeyMap } from '../utils/keyboardMapping';
 
-const whiteKeyWidth = 50;
-const blackKeyWidth = 28;
+const whiteKeyWidth = 44;
+const blackKeyWidth = 26;
 const pianoHeight = 150;
 
 const KeyboardContainer = styled.div`
   position: fixed;
+  max-width: 100vw;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
@@ -32,12 +33,15 @@ const KeysWrapper = styled.div`
   align-items: flex-start;
   border-radius: 0 0 4px 4px;
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  overflow-x: auto;
 `;
 
 const KeyLabel = styled.span<{
   isBlack?: boolean;
   position: 'top' | 'bottom';
   labelPosition?: '<<' | '<' | '' | '>' | '>>';
+  isC?: boolean;
 }>`
   position: absolute;
   ${(props) => (props.position === 'top' ? 'top: 8px;' : 'bottom: 8px;')}
@@ -64,6 +68,7 @@ const KeyLabel = styled.span<{
   color: ${(props) => (props.isBlack ? '#fff' : '#666')};
   text-transform: ${(props) => (props.position === 'top' ? 'none' : 'uppercase')};
   pointer-events: none;
+  font-weight: ${(props) => (props.isC && props.position === 'top' ? 'bold' : 'normal')};
 `;
 
 const WhiteKey = styled.div<{ isPressed: boolean }>`
@@ -87,7 +92,8 @@ const WhiteKey = styled.div<{ isPressed: boolean }>`
 const BlackKey = styled.div<{ isPressed: boolean; offset?: number }>`
   width: ${blackKeyWidth}px;
   height: ${pianoHeight - 50}px;
-  background: ${(props) => (props.isPressed ? '#81c784' : '#333')};
+  background: ${(props) =>
+    props.isPressed ? '#81c784' : 'linear-gradient(to bottom, #666, #111)'};
   box-shadow: 1px 2px 4px 0px rgba(0, 0, 0, 0.5);
   position: absolute;
   right: -${(props) => blackKeyWidth / 2 + (props.offset ?? 0)}px;
@@ -135,12 +141,16 @@ const getOctave = (midiNote: number): number => {
   return Math.floor(midiNote / 12) - 1;
 };
 
-interface PianoKeyboardProps {}
+type PianoKey = {
+  note: string;
+  hasBlack: boolean;
+  labelOffset?: '<<' | '<' | '' | '>' | '>>';
+  blackOffset?: 'left' | 'right' | 'none';
+  midiNote: number;
+};
 
-const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
-  const { pressNote, releaseNote, isNotePressed } = useNoteStore();
-
-  const createOctave = (startNote: number) => [
+function createOctave(startNote: number): Array<PianoKey> {
+  return [
     {
       note: 'C',
       hasBlack: true,
@@ -191,13 +201,38 @@ const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
       midiNote: startNote + 11,
     },
   ];
+}
 
-  const keys = [
-    ...createOctave(36), // C2
-    ...createOctave(48), // C3
-    ...createOctave(60), // C4 (middle C)
-    ...createOctave(72), // C5
-  ];
+const keys = [
+  ...createOctave(0).slice(-2), // C0
+  ...createOctave(24), // C1
+  ...createOctave(36), // C2
+  ...createOctave(48), // C3
+  ...createOctave(60), // C4 (middle C)
+  ...createOctave(72), // C5
+  ...createOctave(84), // C6
+  ...createOctave(96), // C7
+  {
+    ...createOctave(108).at(0),
+    hasBlack: false,
+    labelOffset: '',
+  } as PianoKey,
+] satisfies Array<PianoKey>;
+
+interface PianoKeyboardProps {}
+
+const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
+  const { pressNote, releaseNote, isNotePressed } = useNoteStore();
+  const keysWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (keysWrapperRef.current) {
+      const totalWidth = keysWrapperRef.current.scrollWidth;
+      const viewportWidth = keysWrapperRef.current.clientWidth;
+      // Scroll to middle C (approximately middle of the piano)
+      keysWrapperRef.current.scrollLeft = (totalWidth - viewportWidth) / 2 - 60;
+    }
+  }, []);
 
   const handleNotePress = (midiNote: number) => {
     pressNote({
@@ -213,7 +248,7 @@ const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
 
   return (
     <KeyboardContainer>
-      <KeysWrapper>
+      <KeysWrapper ref={keysWrapperRef}>
         {keys.map((key, index) => (
           <KeyWrapper key={index} hasBlackKey={key.hasBlack}>
             <WhiteKey
@@ -222,7 +257,7 @@ const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
               onMouseUp={() => handleNoteRelease(key.midiNote)}
               onMouseLeave={() => handleNoteRelease(key.midiNote)}
             >
-              <KeyLabel position="top" labelPosition={key.labelOffset}>
+              <KeyLabel position="top" labelPosition={key.labelOffset} isC={key.note === 'C'}>
                 {key.note}
                 {key.note === 'C' ? getOctave(key.midiNote) : ''}
               </KeyLabel>
@@ -236,9 +271,9 @@ const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
                 onMouseUp={() => handleNoteRelease(key.midiNote + 1)}
                 onMouseLeave={() => handleNoteRelease(key.midiNote + 1)}
               >
-                <KeyLabel isBlack position="top">
+                {/*<KeyLabel isBlack position="top">
                   {key.note}#
-                </KeyLabel>
+                </KeyLabel>*/}
                 <KeyLabel isBlack position="bottom">
                   {findKeyByNote(key.midiNote + 1)}
                 </KeyLabel>

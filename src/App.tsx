@@ -17,7 +17,7 @@ function App(): JSX.Element {
   return (
     <div className="flex w-full h-screen overflow-hidden bg-[#1a1a1a] text-white">
       <div className="w-[400px] h-screen flex flex-col gap-4 overflow-y-auto p-5 pb-[200px]">
-        <h1 className="text-4xl text-zinc-400 py-6">Notanica</h1>
+        <h1 className="text-4xl text-zinc-400 text-left">🎹 Notanica</h1>
 
         <MidiDevice />
 

@@ -56,20 +56,21 @@ export const StaffVisualizer = () => {
       });
 
     // Determine which clefs to show based on note octaves
-    const hasHighNotes = highNotes.length > 0;
-    const hasLowNotes = lowNotes.length > 0;
+    // const hasHighNotes = highNotes.length > 0;
+    // const hasLowNotes = lowNotes.length > 0;
 
     // Create voices and notes based on which clefs we need
     let voicesAndNotes = '';
-    if (hasHighNotes && !hasLowNotes) {
-      voicesAndNotes = `V:1 clef=treble\n[${highNotes.join(' ')}]\n`;
-    } else if (!hasHighNotes && hasLowNotes) {
-      voicesAndNotes = `V:1 clef=bass\n[${lowNotes.join(' ')}]\n`;
-    } else if (hasHighNotes || hasLowNotes) {
-      voicesAndNotes = `V:1 clef=treble\n[${highNotes.join(' ')}]\nV:2 clef=bass\n[${lowNotes.join(' ')}]\n`;
-    } else {
-      voicesAndNotes = `V:1 clef=treble\nz4\n`;
-    }
+    voicesAndNotes = `V:1 clef=treble\n[${highNotes.join(' ') || 'z4'}]\nV:2 clef=bass\n[${lowNotes.join(' ') || 'z4'}]\n`;
+    // if (hasHighNotes && !hasLowNotes) {
+    //   voicesAndNotes = `V:1 clef=treble\n[${highNotes.join(' ')}]\n`;
+    // } else if (!hasHighNotes && hasLowNotes) {
+    //   voicesAndNotes = `V:1 clef=bass\n[${lowNotes.join(' ')}]\n`;
+    // } else if (hasHighNotes || hasLowNotes) {
+    //   voicesAndNotes = `V:1 clef=treble\n[${highNotes.join(' ')}]\nV:2 clef=bass\n[${lowNotes.join(' ')}]\n`;
+    // } else {
+    //   voicesAndNotes = `V:1 clef=treble\nz4\n`;
+    // }
 
     const abcNotation = `
 X: 1

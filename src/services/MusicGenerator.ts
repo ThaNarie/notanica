@@ -16,15 +16,28 @@ export enum Key {
     FMajor = 'F Major'
 }
 
+/**
+ * Represents all possible notes in the chromatic scale
+ * Including enharmonic equivalents (e.g., C# = Db)
+ */
 export enum ScaleNote {
     C = 'C',
+    Cs = 'C#',
+    Db = 'Db',
     D = 'D',
+    Ds = 'D#',
+    Eb = 'Eb',
     E = 'E',
     F = 'F',
+    Fs = 'F#',
+    Gb = 'Gb',
     G = 'G',
+    Gs = 'G#',
+    Ab = 'Ab',
     A = 'A',
-    B = 'B',
-    Bb = 'Bb'  // Added for F major scale
+    As = 'A#',
+    Bb = 'Bb',
+    B = 'B'
 }
 
 /**
@@ -40,7 +53,16 @@ export class MusicGenerator {
         [ScaleNote.G]: ChordType.Major,
         [ScaleNote.A]: ChordType.Minor,
         [ScaleNote.B]: ChordType.Diminished,
-        [ScaleNote.Bb]: undefined  // Not used in C major
+        [ScaleNote.Cs]: undefined,
+        [ScaleNote.Db]: undefined,
+        [ScaleNote.Ds]: undefined,
+        [ScaleNote.Eb]: undefined,
+        [ScaleNote.Fs]: undefined,
+        [ScaleNote.Gb]: undefined,
+        [ScaleNote.Gs]: undefined,
+        [ScaleNote.Ab]: undefined,
+        [ScaleNote.As]: undefined,
+        [ScaleNote.Bb]: undefined
     };
 
     private static readonly AMinorScaleChords: Record<ScaleNote, ChordType | undefined> = {
@@ -51,7 +73,16 @@ export class MusicGenerator {
         [ScaleNote.E]: ChordType.Minor,
         [ScaleNote.F]: ChordType.Major,
         [ScaleNote.G]: ChordType.Major,
-        [ScaleNote.Bb]: undefined  // Not used in A minor
+        [ScaleNote.Cs]: undefined,
+        [ScaleNote.Db]: undefined,
+        [ScaleNote.Ds]: undefined,
+        [ScaleNote.Eb]: undefined,
+        [ScaleNote.Fs]: undefined,
+        [ScaleNote.Gb]: undefined,
+        [ScaleNote.Gs]: undefined,
+        [ScaleNote.Ab]: undefined,
+        [ScaleNote.As]: undefined,
+        [ScaleNote.Bb]: undefined
     };
 
     private static readonly FMajorScaleChords: Record<ScaleNote, ChordType | undefined> = {
@@ -62,50 +93,104 @@ export class MusicGenerator {
         [ScaleNote.C]: ChordType.Major,
         [ScaleNote.D]: ChordType.Minor,
         [ScaleNote.E]: ChordType.Diminished,
-        [ScaleNote.B]: undefined  // Not used in F major
+        [ScaleNote.Cs]: undefined,
+        [ScaleNote.Db]: undefined,
+        [ScaleNote.Ds]: undefined,
+        [ScaleNote.Eb]: undefined,
+        [ScaleNote.Fs]: undefined,
+        [ScaleNote.Gb]: undefined,
+        [ScaleNote.Gs]: undefined,
+        [ScaleNote.Ab]: undefined,
+        [ScaleNote.As]: undefined,
+        [ScaleNote.B]: undefined
     };
 
-    private static readonly CHORD_NOTES: Record<ScaleNote, Record<ChordType, ScaleNote[]>> = {
+    static readonly CHORD_NOTES: Record<ScaleNote, Record<ChordType, ScaleNote[]>> = {
         [ScaleNote.C]: {
             [ChordType.Major]: [ScaleNote.C, ScaleNote.E, ScaleNote.G],
-            [ChordType.Minor]: [ScaleNote.C, ScaleNote.E, ScaleNote.G], // Not used in our scales
-            [ChordType.Diminished]: [ScaleNote.C, ScaleNote.E, ScaleNote.G], // Not used in our scales
+            [ChordType.Minor]: [ScaleNote.C, ScaleNote.Eb, ScaleNote.G],
+            [ChordType.Diminished]: [ScaleNote.C, ScaleNote.Eb, ScaleNote.Gb]
+        },
+        [ScaleNote.Cs]: {
+            [ChordType.Major]: [ScaleNote.Cs, ScaleNote.F, ScaleNote.Gs],
+            [ChordType.Minor]: [ScaleNote.Cs, ScaleNote.E, ScaleNote.Gs],
+            [ChordType.Diminished]: [ScaleNote.Cs, ScaleNote.E, ScaleNote.G]
         },
         [ScaleNote.D]: {
-            [ChordType.Major]: [ScaleNote.D, ScaleNote.F, ScaleNote.A], // Not used in our scales
+            [ChordType.Major]: [ScaleNote.D, ScaleNote.Fs, ScaleNote.A],
             [ChordType.Minor]: [ScaleNote.D, ScaleNote.F, ScaleNote.A],
-            [ChordType.Diminished]: [ScaleNote.D, ScaleNote.F, ScaleNote.A], // Not used in our scales
+            [ChordType.Diminished]: [ScaleNote.D, ScaleNote.F, ScaleNote.Ab]
+        },
+        [ScaleNote.Eb]: {
+            [ChordType.Major]: [ScaleNote.Eb, ScaleNote.G, ScaleNote.Bb],
+            [ChordType.Minor]: [ScaleNote.Eb, ScaleNote.Gb, ScaleNote.Bb],
+            [ChordType.Diminished]: [ScaleNote.Eb, ScaleNote.Gb, ScaleNote.A]
         },
         [ScaleNote.E]: {
-            [ChordType.Major]: [ScaleNote.E, ScaleNote.G, ScaleNote.B], // Not used in our scales
+            [ChordType.Major]: [ScaleNote.E, ScaleNote.Gs, ScaleNote.B],
             [ChordType.Minor]: [ScaleNote.E, ScaleNote.G, ScaleNote.B],
-            [ChordType.Diminished]: [ScaleNote.E, ScaleNote.G, ScaleNote.Bb], // In F major
+            [ChordType.Diminished]: [ScaleNote.E, ScaleNote.G, ScaleNote.Bb]
         },
         [ScaleNote.F]: {
             [ChordType.Major]: [ScaleNote.F, ScaleNote.A, ScaleNote.C],
-            [ChordType.Minor]: [ScaleNote.F, ScaleNote.A, ScaleNote.C], // Not used in our scales
-            [ChordType.Diminished]: [ScaleNote.F, ScaleNote.A, ScaleNote.C], // Not used in our scales
+            [ChordType.Minor]: [ScaleNote.F, ScaleNote.Ab, ScaleNote.C],
+            [ChordType.Diminished]: [ScaleNote.F, ScaleNote.Ab, ScaleNote.B]
+        },
+        [ScaleNote.Fs]: {
+            [ChordType.Major]: [ScaleNote.Fs, ScaleNote.As, ScaleNote.Cs],
+            [ChordType.Minor]: [ScaleNote.Fs, ScaleNote.A, ScaleNote.Cs],
+            [ChordType.Diminished]: [ScaleNote.Fs, ScaleNote.A, ScaleNote.C]
         },
         [ScaleNote.G]: {
-            [ChordType.Major]: [ScaleNote.G, ScaleNote.B, ScaleNote.D], // In C major
-            [ChordType.Minor]: [ScaleNote.G, ScaleNote.Bb, ScaleNote.D], // In F major
-            [ChordType.Diminished]: [ScaleNote.G, ScaleNote.Bb, ScaleNote.D], // Not used in our scales
+            [ChordType.Major]: [ScaleNote.G, ScaleNote.B, ScaleNote.D],
+            [ChordType.Minor]: [ScaleNote.G, ScaleNote.Bb, ScaleNote.D],
+            [ChordType.Diminished]: [ScaleNote.G, ScaleNote.Bb, ScaleNote.Db]
+        },
+        [ScaleNote.Ab]: {
+            [ChordType.Major]: [ScaleNote.Ab, ScaleNote.C, ScaleNote.Eb],
+            [ChordType.Minor]: [ScaleNote.Ab, ScaleNote.B, ScaleNote.Eb],
+            [ChordType.Diminished]: [ScaleNote.Ab, ScaleNote.B, ScaleNote.D]
         },
         [ScaleNote.A]: {
-            [ChordType.Major]: [ScaleNote.A, ScaleNote.C, ScaleNote.E], // Not used in our scales
+            [ChordType.Major]: [ScaleNote.A, ScaleNote.Cs, ScaleNote.E],
             [ChordType.Minor]: [ScaleNote.A, ScaleNote.C, ScaleNote.E],
-            [ChordType.Diminished]: [ScaleNote.A, ScaleNote.C, ScaleNote.E], // Not used in our scales
-        },
-        [ScaleNote.B]: {
-            [ChordType.Major]: [ScaleNote.B, ScaleNote.D, ScaleNote.F], // Not used in our scales
-            [ChordType.Minor]: [ScaleNote.B, ScaleNote.D, ScaleNote.F], // Not used in our scales
-            [ChordType.Diminished]: [ScaleNote.B, ScaleNote.D, ScaleNote.F],
+            [ChordType.Diminished]: [ScaleNote.A, ScaleNote.C, ScaleNote.Eb]
         },
         [ScaleNote.Bb]: {
-            [ChordType.Major]: [ScaleNote.Bb, ScaleNote.D, ScaleNote.F], // In F major
-            [ChordType.Minor]: [ScaleNote.Bb, ScaleNote.D, ScaleNote.F], // Not used in our scales
-            [ChordType.Diminished]: [ScaleNote.Bb, ScaleNote.D, ScaleNote.F], // Not used in our scales
+            [ChordType.Major]: [ScaleNote.Bb, ScaleNote.D, ScaleNote.F],
+            [ChordType.Minor]: [ScaleNote.Bb, ScaleNote.Db, ScaleNote.F],
+            [ChordType.Diminished]: [ScaleNote.Bb, ScaleNote.Db, ScaleNote.E]
         },
+        [ScaleNote.B]: {
+            [ChordType.Major]: [ScaleNote.B, ScaleNote.Ds, ScaleNote.Fs],
+            [ChordType.Minor]: [ScaleNote.B, ScaleNote.D, ScaleNote.Fs],
+            [ChordType.Diminished]: [ScaleNote.B, ScaleNote.D, ScaleNote.F]
+        },
+        [ScaleNote.Db]: {
+            [ChordType.Major]: [ScaleNote.Db, ScaleNote.F, ScaleNote.Ab],
+            [ChordType.Minor]: [ScaleNote.Db, ScaleNote.E, ScaleNote.Ab],
+            [ChordType.Diminished]: [ScaleNote.Db, ScaleNote.E, ScaleNote.G]
+        },
+        [ScaleNote.Ds]: {
+            [ChordType.Major]: [ScaleNote.Ds, ScaleNote.G, ScaleNote.As],
+            [ChordType.Minor]: [ScaleNote.Ds, ScaleNote.Fs, ScaleNote.As],
+            [ChordType.Diminished]: [ScaleNote.Ds, ScaleNote.Fs, ScaleNote.A]
+        },
+        [ScaleNote.Gb]: {
+            [ChordType.Major]: [ScaleNote.Gb, ScaleNote.Bb, ScaleNote.Db],
+            [ChordType.Minor]: [ScaleNote.Gb, ScaleNote.A, ScaleNote.Db],
+            [ChordType.Diminished]: [ScaleNote.Gb, ScaleNote.A, ScaleNote.C]
+        },
+        [ScaleNote.Gs]: {
+            [ChordType.Major]: [ScaleNote.Gs, ScaleNote.C, ScaleNote.Ds],
+            [ChordType.Minor]: [ScaleNote.Gs, ScaleNote.B, ScaleNote.Ds],
+            [ChordType.Diminished]: [ScaleNote.Gs, ScaleNote.B, ScaleNote.D]
+        },
+        [ScaleNote.As]: {
+            [ChordType.Major]: [ScaleNote.As, ScaleNote.D, ScaleNote.F],
+            [ChordType.Minor]: [ScaleNote.As, ScaleNote.Cs, ScaleNote.F],
+            [ChordType.Diminished]: [ScaleNote.As, ScaleNote.Cs, ScaleNote.E]
+        }
     };
 
     /**

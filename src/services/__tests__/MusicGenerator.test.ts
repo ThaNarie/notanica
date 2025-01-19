@@ -5,35 +5,60 @@ describe('MusicGenerator', () => {
         it('should return all major chords in C major scale', () => {
             const majorChords = MusicGenerator.getChordsOfType(Key.CMajor, ChordType.Major);
             expect(majorChords).toEqual([
-                [ScaleNote.C, ScaleNote.E, ScaleNote.G],  // C major
-                [ScaleNote.F, ScaleNote.A, ScaleNote.C],  // F major
-                [ScaleNote.G, ScaleNote.B, ScaleNote.D],  // G major
+                [ScaleNote.C, ScaleNote.E, ScaleNote.G],   // C major
+                [ScaleNote.F, ScaleNote.A, ScaleNote.C],   // F major
+                [ScaleNote.G, ScaleNote.B, ScaleNote.D]    // G major
             ]);
         });
 
         it('should return all minor chords in C major scale', () => {
             const minorChords = MusicGenerator.getChordsOfType(Key.CMajor, ChordType.Minor);
             expect(minorChords).toEqual([
-                [ScaleNote.D, ScaleNote.F, ScaleNote.A],  // D minor
-                [ScaleNote.E, ScaleNote.G, ScaleNote.B],  // E minor
-                [ScaleNote.A, ScaleNote.C, ScaleNote.E],  // A minor
+                [ScaleNote.D, ScaleNote.F, ScaleNote.A],   // D minor
+                [ScaleNote.E, ScaleNote.G, ScaleNote.B],   // E minor
+                [ScaleNote.A, ScaleNote.C, ScaleNote.E]    // A minor
             ]);
         });
 
         it('should return diminished chords in C major scale', () => {
             const dimChords = MusicGenerator.getChordsOfType(Key.CMajor, ChordType.Diminished);
             expect(dimChords).toEqual([
-                [ScaleNote.B, ScaleNote.D, ScaleNote.F],  // B diminished
+                [ScaleNote.B, ScaleNote.D, ScaleNote.F]    // B diminished
             ]);
         });
 
         it('should return correct major chords in F major scale', () => {
             const majorChords = MusicGenerator.getChordsOfType(Key.FMajor, ChordType.Major);
             expect(majorChords).toEqual([
-                [ScaleNote.F, ScaleNote.A, ScaleNote.C],   // F major
-                [ScaleNote.Bb, ScaleNote.D, ScaleNote.F],  // Bb major
-                [ScaleNote.C, ScaleNote.E, ScaleNote.G],   // C major
+                [ScaleNote.F, ScaleNote.A, ScaleNote.C],    // F major
+                [ScaleNote.Bb, ScaleNote.D, ScaleNote.F],   // Bb major
+                [ScaleNote.C, ScaleNote.E, ScaleNote.G]     // C major
             ]);
+        });
+
+        // Testing chromatic chords that aren't in any of our scales
+        it('should correctly voice chromatic major chords', () => {
+            const ebMajorInChord = MusicGenerator.CHORD_NOTES[ScaleNote.Eb][ChordType.Major];
+            const abMajorInChord = MusicGenerator.CHORD_NOTES[ScaleNote.Ab][ChordType.Major];
+
+            expect(ebMajorInChord).toEqual([ScaleNote.Eb, ScaleNote.G, ScaleNote.Bb]);   // Eb major
+            expect(abMajorInChord).toEqual([ScaleNote.Ab, ScaleNote.C, ScaleNote.Eb]);   // Ab major
+        });
+
+        it('should correctly voice chromatic minor chords', () => {
+            const cMinorInChord = MusicGenerator.CHORD_NOTES[ScaleNote.C][ChordType.Minor];
+            const fsMinorInChord = MusicGenerator.CHORD_NOTES[ScaleNote.Fs][ChordType.Minor];
+
+            expect(cMinorInChord).toEqual([ScaleNote.C, ScaleNote.Eb, ScaleNote.G]);     // C minor
+            expect(fsMinorInChord).toEqual([ScaleNote.Fs, ScaleNote.A, ScaleNote.Cs]);   // F# minor
+        });
+
+        it('should correctly voice chromatic diminished chords', () => {
+            const cDimInChord = MusicGenerator.CHORD_NOTES[ScaleNote.C][ChordType.Diminished];
+            const gsDimInChord = MusicGenerator.CHORD_NOTES[ScaleNote.Gs][ChordType.Diminished];
+
+            expect(cDimInChord).toEqual([ScaleNote.C, ScaleNote.Eb, ScaleNote.Gb]);      // C diminished
+            expect(gsDimInChord).toEqual([ScaleNote.Gs, ScaleNote.B, ScaleNote.D]);      // G# diminished
         });
     });
 

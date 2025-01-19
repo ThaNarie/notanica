@@ -14,8 +14,8 @@ interface ChallengeState {
   addChallenge: (notes: Notes, name?: string) => string; // Returns the id of the new challenge
   removeChallenge: (id: string) => void;
   getChallenges: () => Challenge[];
-  advanceIndex: (challengeId: string) => void;
-  resetProgress: (challengeId: string) => void;
+  advanceIndex: (challengeId: string) => Challenge | undefined;
+  resetProgress: (challengeId: string) => Challenge | undefined;
 }
 
 export const useChallengeStore = create<ChallengeState>((set, get) => ({
@@ -48,25 +48,42 @@ export const useChallengeStore = create<ChallengeState>((set, get) => ({
   },
 
   advanceIndex: (challengeId) => {
-    set(state => ({
-      challenges: state.challenges.map(challenge => 
-        challenge.id === challengeId
-          ? {
-              ...challenge,
-              currentIndex: Math.min(challenge.currentIndex + 1, challenge.notes.length)
-            }
-          : challenge
-      )
-    }));
+    let updatedChallenge: Challenge | undefined;
+    
+    set(state => {
+      const challenges = state.challenges.map(challenge => {
+        if (challenge.id === challengeId) {
+          updatedChallenge = {
+            ...challenge,
+            currentIndex: Math.min(challenge.currentIndex + 1, challenge.notes.length)
+          };
+          return updatedChallenge;
+        }
+        return challenge;
+      });
+      return { challenges };
+    });
+
+    return updatedChallenge;
   },
 
   resetProgress: (challengeId) => {
-    set(state => ({
-      challenges: state.challenges.map(challenge =>
-        challenge.id === challengeId
-          ? { ...challenge, currentIndex: 0 }
-          : challenge
-      )
-    }));
+    let updatedChallenge: Challenge | undefined;
+    
+    set(state => {
+      const challenges = state.challenges.map(challenge => {
+        if (challenge.id === challengeId) {
+          updatedChallenge = {
+            ...challenge,
+            currentIndex: 0
+          };
+          return updatedChallenge;
+        }
+        return challenge;
+      });
+      return { challenges };
+    });
+
+    return updatedChallenge;
   }
 }));

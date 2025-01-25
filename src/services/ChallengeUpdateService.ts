@@ -1,6 +1,6 @@
-import { Note } from '../stores/useNoteStore';
-import { Challenge, useChallengeStore } from '../stores/useChallengeStore';
-import { ScaleNote } from './MusicGenerator';
+import { Note } from "../stores/useNoteStore";
+import { Challenge, useChallengeStore } from "../stores/useChallengeStore";
+import { ScaleNote } from "./MusicGenerator";
 
 export class ChallengeUpdateService {
   /**
@@ -17,11 +17,17 @@ export class ChallengeUpdateService {
       if (!expectedNote) break; // Challenge is complete
 
       // Convert MIDI note to ScaleNote format
-      const playedNoteName = playedNote.noteName.replace(/[0-9]/g, '') as ScaleNote;
+      const playedNoteName = playedNote.noteName.replace(
+        /[0-9]/g,
+        ""
+      ) as ScaleNote;
 
       // Check if the played note matches the expected note
       let updatedChallenge: Challenge | undefined;
-      if (playedNoteName === expectedNote.note && playedNote.octave === expectedNote.octave) {
+      if (
+        playedNoteName === expectedNote.note &&
+        playedNote.octave === expectedNote.octave
+      ) {
         updatedChallenge = store.advanceIndex(challenge.id);
       } else {
         updatedChallenge = store.resetProgress(challenge.id);

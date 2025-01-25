@@ -1,24 +1,20 @@
 import { useEffect, useRef } from 'react';
 import ABCJS from 'abcjs';
+import type { Sequence } from '../types/Sequence';
+import { sequenceToAbcNotation } from '../utils/tonal-abc';
 
 type AbcVisualProps = {
-  notes: string;
+  sequence: Sequence;
 };
 
 // TODO: make more generic, and use this inside StaffVisualizer
-export function AbcVisual({ notes }: AbcVisualProps) {
+export function AbcVisual({ sequence }: AbcVisualProps) {
   const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!divRef.current) return;
 
-    const abcNotation = `
-X: 1
-M: 4/4
-L: 1/4
-K: C
-V:1 clef=treble
-${notes}`;
+    const abcNotation = sequenceToAbcNotation(sequence);
 
     ABCJS.renderAbc(divRef.current, abcNotation, {
       add_classes: true,
@@ -26,6 +22,7 @@ ${notes}`;
       staffwidth: 200,
       // paddingbottom: 0,
       scale: 1.5,
+      timeBasedLayout: { minWidth: 200, minPadding: 25, align: 'left'}
     });
   }, []);
 

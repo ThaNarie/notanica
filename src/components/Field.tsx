@@ -22,6 +22,12 @@ export function Field() {
           >
             Spawn
           </button>
+          <button
+            className="px-5 py-2.5 bg-[#4a4a4a] outline outline-[#666] rounded text-white text-sm cursor-pointer hover:bg-[#5a5a5a] active:bg-[#3a3a3a] transition-all duration-200"
+            onClick={() => useChallengeStore.getState().clearChallenges()}
+          >
+            Clear
+          </button>
         </div>
       </div>
       <div className="flex-1 bg-[#222] rounded-lg border border-[#333] overflow-y-auto">

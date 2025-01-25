@@ -240,6 +240,9 @@ export class MusicGenerator {
    * Generate a simple melody within a given key
    */
   static generateMelody(key: Key, length: number): ScaleNote[] {
+    // return [ScaleNote.C, ScaleNote.D, ScaleNote.E, ScaleNote.C]
+
+
     const notes = this.getKeyNotes(key);
     if (length <= 0 || notes.length === 0) return [];
 

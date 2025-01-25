@@ -16,6 +16,7 @@ interface ChallengeState {
   getChallenges: () => Challenge[];
   advanceIndex: (challengeId: string) => Challenge | undefined;
   resetProgress: (challengeId: string) => Challenge | undefined;
+  resetAllChallenges: () => void;
 }
 
 export const useChallengeStore = create<ChallengeState>((set, get) => ({
@@ -85,5 +86,14 @@ export const useChallengeStore = create<ChallengeState>((set, get) => ({
     });
 
     return updatedChallenge;
+  },
+
+  resetAllChallenges: () => {
+    set((state) => ({
+      challenges: state.challenges.map((challenge) => ({
+        ...challenge,
+        currentIndex: 0,
+      })),
+    }));
   },
 }));

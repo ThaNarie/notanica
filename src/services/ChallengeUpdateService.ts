@@ -5,15 +5,16 @@ import { ScaleNote } from './MusicGenerator';
 export class ChallengeUpdateService {
   /**
    * Check if a played note matches any active challenges and update their progress
+   * If a challenge is completed, removed it from the store and reset all other challenges
    */
-  static updateChallenges(playedNote: Note): void {
+  static updateChallenges(playedNote: Note): boolean {
     const store = useChallengeStore.getState();
     const challenges = store.getChallenges();
 
-    challenges.forEach((challenge) => {
+    for (const challenge of challenges) {
       // Get the next note that should be played in this challenge
       const expectedNote = challenge.notes[challenge.currentIndex];
-      if (!expectedNote) return; // Challenge is complete
+      if (!expectedNote) break; // Challenge is complete
 
       // Convert MIDI note to ScaleNote format
       const playedNoteName = playedNote.noteName.replace(/[0-9]/g, '') as ScaleNote;
@@ -26,15 +27,13 @@ export class ChallengeUpdateService {
         updatedChallenge = store.resetProgress(challenge.id);
       }
 
-      console.log('Checking for challenge completion...');
       if (updatedChallenge && this.isChallengeComplete(updatedChallenge)) {
-        console.log('Challenge complete!');
         store.removeChallenge(challenge.id);
-
-        // TODO: do other logic here for completing a challenge
-        // Maybe return the list of completed challenges?
+        useChallengeStore.getState().resetAllChallenges();
+        return true;
       }
-    });
+    }
+    return false;
   }
 
   /**

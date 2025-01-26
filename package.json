@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@emotion/styled": "^11.14.0",
+    "@mediamonks/react-kit": "^2.0.4",
     "@tonaljs/tonal": "^4.10.0",
     "abcjs": "^6.4.4",
     "clsx": "^2.1.1",

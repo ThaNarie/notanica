@@ -2,12 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import { useNoteStore } from '../stores/useNoteStore';
 import { upperKeyMap, lowerKeyMap } from '../utils/keyboardMapping';
+import { useKeyDown } from '../hooks/useKeyDown';
 
 const whiteKeyWidth = 44;
 const blackKeyWidth = 26;
 const pianoHeight = 150;
 
 const KeyboardContainer = styled.div`
+  user-select: none;
   position: fixed;
   max-width: 100vw;
   bottom: 20px;
@@ -222,8 +224,9 @@ const keys = [
 interface PianoKeyboardProps {}
 
 const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
-  const { pressNote, releaseNote, isNotePressed } = useNoteStore();
+  const { pressNote, releaseNote, isNotePressed, releaseAllNotes } = useNoteStore();
   const keysWrapperRef = useRef<HTMLDivElement>(null);
+  const isShiftDown = useKeyDown('Shift');
 
   useEffect(() => {
     if (keysWrapperRef.current) {
@@ -243,8 +246,16 @@ const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
   };
 
   const handleNoteRelease = (midiNote: number) => {
-    releaseNote(midiNote);
+    if (!isShiftDown) {
+      releaseNote(midiNote);
+    }
   };
+
+  useEffect(() => {
+    if (!isShiftDown) {
+      releaseAllNotes();
+    }
+  }, [isShiftDown]);
 
   return (
     <KeyboardContainer>

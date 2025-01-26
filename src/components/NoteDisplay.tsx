@@ -1,9 +1,10 @@
+import { Chord } from 'tonal';
 import { cn } from '../lib/utils';
 import { useNoteStore } from '../stores/useNoteStore';
 import { StaffVisualizer } from './StaffVisualizer';
 
 export function NoteDisplay(): JSX.Element {
-  const { activeNotes } = useNoteStore();
+  const { activeNotes, getActiveChord } = useNoteStore();
 
   return (
     <div
@@ -40,6 +41,18 @@ export function NoteDisplay(): JSX.Element {
             ))}
           </div>
         )}
+      </div>
+
+      <div>
+        {getActiveChord().map((chord) => (
+          <div
+            key={chord}
+            className="flex flex-col gap-1 bg-neutral-900/50 rounded p-3 border border-zinc-800"
+          >
+            <div className="text-lg font-medium">{chord}</div>
+            <div className="text-sm text-zinc-400">{Chord.get(chord).name}</div>
+          </div>
+        ))}
       </div>
     </div>
   );

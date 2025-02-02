@@ -238,11 +238,15 @@ const PianoKeyboard: React.FC<PianoKeyboardProps> = () => {
   }, []);
 
   const handleNotePress = (midiNote: number) => {
-    pressNote({
-      pitch: midiNote,
-      velocity: 100,
-      source: 'keyboard',
-    });
+    if (isNotePressed(midiNote)) {
+      releaseNote(midiNote);
+    } else {
+      pressNote({
+        pitch: midiNote,
+        velocity: 100,
+        source: 'keyboard',
+      });
+    }
   };
 
   const handleNoteRelease = (midiNote: number) => {

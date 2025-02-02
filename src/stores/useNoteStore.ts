@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { Chord } from "tonal";
-import { ChallengeUpdateService } from "../services/ChallengeUpdateService";
+import { create } from 'zustand';
+import { Chord } from 'tonal';
+import { ChallengeUpdateService } from '../services/ChallengeUpdateService';
 
 export interface Note {
   // Core properties
@@ -24,49 +24,36 @@ interface NoteState {
   activeNotes: Note[];
   releasedNotes: Note[]; // History of released notes
   // Actions
-  pressNote: (note: Pick<Note, "pitch" | "velocity" | "source">) => void;
+  pressNote: (note: Pick<Note, 'pitch' | 'velocity' | 'source'>) => void;
   releaseNote: (pitch: number) => void;
   releaseAllNotes: () => void;
   // Queries
   isNotePressed: (pitch: number) => boolean;
   getNoteInfo: (
-    pitch: number
-  ) => Omit<Note, "velocity" | "source" | "startTime" | "endTime" | "duration">;
+    pitch: number,
+  ) => Omit<Note, 'velocity' | 'source' | 'startTime' | 'endTime' | 'duration'>;
   getActiveChord: () => Array<string>;
 }
 
-const NOTE_NAMES = [
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-  "A",
-  "A#",
-  "B",
-];
+const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const ABC_NOTATION: Record<string, string> = {
-  C: "C",
-  "C#": "^C",
-  D: "D",
-  "D#": "^D",
-  E: "E",
-  F: "F",
-  "F#": "^F",
-  G: "G",
-  "G#": "^G",
-  A: "A",
-  "A#": "^A",
-  B: "B",
-  Db: "_D",
-  Eb: "_E",
-  Gb: "_G",
-  Ab: "_A",
-  Bb: "_B",
+  C: 'C',
+  'C#': '^C',
+  D: 'D',
+  'D#': '^D',
+  E: 'E',
+  F: 'F',
+  'F#': '^F',
+  G: 'G',
+  'G#': '^G',
+  A: 'A',
+  'A#': '^A',
+  B: 'B',
+  Db: '_D',
+  Eb: '_E',
+  Gb: '_G',
+  Ab: '_A',
+  Bb: '_B',
 };
 
 export const useNoteStore = create<NoteState>((set, get) => ({
@@ -128,9 +115,7 @@ export const useNoteStore = create<NoteState>((set, get) => ({
     };
 
     set((state) => {
-      const newActiveNotes = [...state.activeNotes, newNote].sort(
-        (a, b) => a.pitch - b.pitch
-      );
+      const newActiveNotes = [...state.activeNotes, newNote].sort((a, b) => a.pitch - b.pitch);
       return { activeNotes: newActiveNotes };
     });
 
@@ -166,10 +151,7 @@ export const useNoteStore = create<NoteState>((set, get) => ({
       }));
       return {
         activeNotes: [],
-        releasedNotes: [...releasedNotes, ...state.releasedNotes].slice(
-          0,
-          1000
-        ), // Keep last 1000 notes
+        releasedNotes: [...releasedNotes, ...state.releasedNotes].slice(0, 1000), // Keep last 1000 notes
       };
     }),
 
